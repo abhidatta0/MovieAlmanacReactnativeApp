@@ -4,6 +4,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeScreen from './src/screens/Home';
 import ShortListedScreen from './src/screens/Shortlisted';
+import {useShortListContext, ShortListedProvider} from './src/contexts/shortListedContext';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -13,8 +14,9 @@ export type RootStackParamList = {
 const Tab  = createBottomTabNavigator<RootStackParamList>();
 
 const App = () => {
+  const {movies} = useShortListContext();
+
   return (
-    <NavigationContainer>
       <Tab.Navigator screenOptions={({route})=>({
         tabBarIcon:({focused, color})=>{
           let iconName;
@@ -29,13 +31,21 @@ const App = () => {
         tabBarActiveTintColor: 'tomato', 
         tabBarInactiveTintColor:'gray'})}>
         <Tab.Screen name="Home" component={HomeScreen}/>
-        <Tab.Screen name="ShortListed" component={ShortListedScreen} options={{ tabBarBadge: 3 }}/>
-      </Tab.Navigator>  
-    </NavigationContainer>
+        <Tab.Screen name="ShortListed" component={ShortListedScreen} options={{ tabBarBadge: movies.length }}/>
+      </Tab.Navigator> 
   );
 };
 
-export default App;
+const AppContainer = ()=>{
+  return (
+    <NavigationContainer>
+      <ShortListedProvider>
+        <App />
+      </ShortListedProvider>
+    </NavigationContainer>
+  )
+}
+export default AppContainer;
 
 type BottomIconType = {
   name: string;
