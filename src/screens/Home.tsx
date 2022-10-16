@@ -7,8 +7,10 @@ import { View, TextInput, StyleSheet,
 import {useState} from 'react';
 import { MovieType } from '../types/movie';
 import MovieCard from '../components/MovieCard';
+import {useShortListContext, addMovieAction} from '../contexts/shortListedContext';
 
 const Home = ()=>{
+    const {dispatch, movies} = useShortListContext();
     const [searchText, setSearchText] = useState('');
 
     const [searchResults, setSearchResults] = useState<MovieType[]>([]);
@@ -34,6 +36,13 @@ const Home = ()=>{
         ])
     }
 
+    const onShortlistButtonPress= (movie: MovieType)=>{
+        const findIndex = movies.findIndex((currMovie)=> currMovie.imdbID === movie.imdbID);
+        if(findIndex === -1){
+            dispatch(addMovieAction(movie));
+        }
+    }
+
     return (
             <View  style={styles.flatList}>
                 <TextInput 
@@ -47,7 +56,7 @@ const Home = ()=>{
                 <FlatList
               data={searchResults}
               renderItem={({item})=>(
-                <MovieCard movie={item}/>
+                <MovieCard movie={item} onShortlistButtonPress={()=> onShortlistButtonPress(item)}/>
               )}
               numColumns={2}
               contentContainerStyle={styles.flatList}

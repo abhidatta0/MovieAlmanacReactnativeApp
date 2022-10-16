@@ -29,6 +29,9 @@ const reducer = (state: ShortListState, action: ALL_ACTIONS)=>{
     }
    }
 } 
+
+export const addMovieAction = (movie: MovieType):ADD_MOVIE_ACTION=>({type: 'ADD_MOVIE', payload: movie});
+
 export const ShortListedProvider = ({children}: {children: React.ReactNode})=>{
     const [state, dispatch] = useReducer(reducer, {
         movies: [],
