@@ -4,6 +4,7 @@ import { View, TextInput, StyleSheet,
     TouchableOpacity,
     Text,
     Keyboard,
+    ActivityIndicator,
 } from 'react-native';
 import {useState} from 'react';
 import { MovieType } from '../types/movie';
@@ -13,10 +14,12 @@ import {useShortListContext, addMovieAction} from '../contexts/shortListedContex
 const Home = ()=>{
     const {dispatch, movies} = useShortListContext();
     const [searchText, setSearchText] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const [searchResults, setSearchResults] = useState<MovieType[]>();
 
     const handleSubmit = async ()=>{
+        setLoading(true);
         setSearchText('');
         Keyboard.dismiss();
         try{
@@ -31,6 +34,8 @@ const Home = ()=>{
         }catch(e){
             showErrorAlert();
             console.log(e);
+        }finally{
+        setLoading(false);
         }
     }
 
@@ -46,7 +51,17 @@ const Home = ()=>{
         const findIndex = movies.findIndex((currMovie)=> currMovie.imdbID === movie.imdbID);
         if(findIndex === -1){
             dispatch(addMovieAction(movie));
+        }else{
+            alreadyShortlistedAlert();
         }
+    }
+
+    const alreadyShortlistedAlert = ()=>{
+        Alert.alert('Already shortlisted this movie',undefined, [
+            {
+                text: 'Ok',
+            }
+        ])
     }
 
     return (
@@ -61,8 +76,11 @@ const Home = ()=>{
                     <Text style={styles.submitBtnText}>Get Movies</Text>
                 </TouchableOpacity>
                 {
-                  (searchResults && searchResults.length === 0) ? 
-                  <Text style={styles.notFoundText}>No movies found for this search</Text>
+                    loading ? <ActivityIndicator size="large"/> : null
+                }
+                {
+                  (!loading && searchResults && searchResults.length === 0) ? 
+                  <Text style={styles.notFoundText}>No movies found for this search {'\n'} or {'\n'} Search is empty</Text>
                 : (<FlatList
               data={searchResults}
               renderItem={({item})=>(
