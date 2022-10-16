@@ -1,6 +1,8 @@
 import { View, TextInput, StyleSheet, 
     Alert,
     FlatList,
+    TouchableOpacity,
+    Text,
 } from 'react-native';
 import {useState} from 'react';
 import { MovieType } from '../types/movie';
@@ -38,8 +40,10 @@ const Home = ()=>{
                 style={styles.textInput}
                 value={searchText}
                 onChangeText={setSearchText}
-                onSubmitEditing={handleSubmit}
                 />
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.submitBtnText}>Get Movies</Text>
+                </TouchableOpacity>
                 <FlatList
               data={searchResults}
               renderItem={({item})=>(
@@ -62,6 +66,16 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
    },
-   flatList:{marginVertical: 20, paddingBottom: 20 }
+   button:{
+    marginTop: 2,
+    backgroundColor: 'orange',
+    padding: 10,
+    alignItems:'center',
+   },
+   submitBtnText:{
+    color: '#fff',
+    fontSize: 20
+   },
+   flatList:{marginVertical: 20, paddingBottom: 50 }
 })
 export default Home;
