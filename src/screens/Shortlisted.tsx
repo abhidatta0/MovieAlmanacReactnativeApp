@@ -3,30 +3,43 @@ import MovieCard from '../components/MovieCard';
 
 import {useShortListContext} from '../contexts/shortListedContext';
 
+const NoMovies = ()=> <View style={styles.empty}>
+<Text style={styles.emptyText}>Mo movies shortlisted yet!</Text>
+</View>
 const ShortListed = ()=>{
   const { movies} = useShortListContext();
-  
-  if(movies.length === 0){
-    <View>
-      <Text>Mo movies shortlisted yet!</Text>
-    </View>
-  }
+
   return (
-    <View>
+    <View style={styles.container}>
+      {
+        movies.length === 0 ? <NoMovies /> :
       <FlatList
       data={movies}
       renderItem={({item})=>(
         <MovieCard movie={item}/>
       )}
       numColumns={2}
-      contentContainerStyle={styles.flatList}
+      columnWrapperStyle={{justifyContent: 'space-between'}}
       />
+      }
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  flatList:{marginVertical: 20, paddingBottom: 50 }
+  container:{
+    flex: 1, 
+    paddingHorizontal: 10, 
+    paddingBottom: 20,
+    marginTop: 20,
+   },
+   empty:{
+    alignItems: 'center',
+   },
+   emptyText:{
+    fontSize: 20,
+    fontWeight: 'bold'
+   }
 });
 
 

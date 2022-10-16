@@ -1,17 +1,20 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, ViewStyle} from 'react-native';
 
 import { MovieType } from '../types/movie';
 
 type Props = {
     movie: MovieType;
     onShortlistButtonPress?: ()=> void,
+    style?: ViewStyle,
 }
 
-const MovieCard = ({movie, onShortlistButtonPress}:Props)=>{
+const MovieCard = ({movie, onShortlistButtonPress, style}:Props)=>{
    return (
-    <View style={styles.movieCard}>
-      <Image source={{uri: movie.Poster}} style={styles.img} resizeMode="cover"/>
-      <Text style={styles.title} numberOfLines={2}>{movie.Title}</Text>
+    <View style={[styles.movieCard, style]}>
+      {movie.Poster && <Image source={{uri: movie.Poster}} style={styles.img} resizeMode="cover"/>}
+      <View style={{flex: 1}}>
+        <Text style={styles.title} numberOfLines={3}>{movie.Title}</Text>
+      </View>
       <Text>Year of Release: {movie.Year}</Text>      
       {onShortlistButtonPress 
         && 
@@ -29,17 +32,21 @@ export default MovieCard;
 
 const styles = StyleSheet.create({
     movieCard:{
-        flex: 1,
-        maxHeight: 500,
-        borderWidth: 1,
-        width: '50%',
+        height: 400,
+        width: '49%',
         padding: 10,
+        marginBottom: 10,
+        backgroundColor: '#FFF4EC',
+        borderWidth: 1,
+        borderRadius: 6,
     },
     title:{
       fontWeight: '400',
       fontSize: 20,
+      flexShrink: 0,
+      color: 'black',
     },
-    img:{width: '100%', height: '80%'},
+    img:{width: '100%', height: '70%'},
     shortListBtn:{
       marginTop: 5,
       alignItems: 'center',

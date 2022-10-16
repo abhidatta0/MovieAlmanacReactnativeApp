@@ -14,7 +14,7 @@ const Home = ()=>{
     const {dispatch, movies} = useShortListContext();
     const [searchText, setSearchText] = useState('');
 
-    const [searchResults, setSearchResults] = useState<MovieType[]>([]);
+    const [searchResults, setSearchResults] = useState<MovieType[]>();
 
     const handleSubmit = async ()=>{
         setSearchText('');
@@ -55,20 +55,21 @@ const Home = ()=>{
                 style={styles.textInput}
                 value={searchText}
                 onChangeText={setSearchText}
+                placeholder="Enter movie name"
                 />
                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                     <Text style={styles.submitBtnText}>Get Movies</Text>
                 </TouchableOpacity>
                 {
-                  searchResults.length === 0 ? 
+                  (searchResults && searchResults.length === 0) ? 
                   <Text style={styles.notFoundText}>No movies found for this search</Text>
                 : (<FlatList
               data={searchResults}
               renderItem={({item})=>(
-                <MovieCard movie={item} onShortlistButtonPress={()=> onShortlistButtonPress(item)}/>
+                <MovieCard movie={item} onShortlistButtonPress={()=> onShortlistButtonPress(item)} style={styles.customMovieCardStyle}/>
               )}
               numColumns={2}
-              contentContainerStyle={styles.flatList}
+              columnWrapperStyle={{justifyContent: 'space-between'}}
             />)
               }
             </View>
@@ -84,9 +85,12 @@ const styles = StyleSheet.create({
    textInput: {
     height: 40,
     borderWidth: 1,
+    backgroundColor: 'white',
+    padding: 10,
    },
    button:{
     marginTop: 2,
+    marginBottom: 10,
     backgroundColor: 'orange',
     padding: 10,
     alignItems:'center',
@@ -101,6 +105,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 10,
    },
-   flatList:{marginVertical: 20, paddingBottom: 50, justifyContent:'space-around'}
+   customMovieCardStyle:{
+    height: 500,
+   }
 })
 export default Home;
