@@ -3,6 +3,7 @@ import { View, TextInput, StyleSheet,
     FlatList,
     TouchableOpacity,
     Text,
+    Keyboard,
 } from 'react-native';
 import {useState} from 'react';
 import { MovieType } from '../types/movie';
@@ -14,14 +15,19 @@ const Home = ()=>{
     const [searchText, setSearchText] = useState('');
 
     const [searchResults, setSearchResults] = useState<MovieType[]>([]);
-    console.log(searchText);
-    console.log({searchResults});
 
     const handleSubmit = async ()=>{
+        setSearchText('');
+        Keyboard.dismiss();
         try{
-            const response = await fetch('https://www.omdbapi.com/?apikey=4dad5ea8&type=movie&s=guardian');
+            const response = await fetch(`https://www.omdbapi.com/?apikey=4dad5ea8&type=movie&s=${searchText}`);
             const data = await response.json();
+            if(data.Response === 'True'){
             setSearchResults(data.Search);
+            }
+            else{
+            setSearchResults([]);
+            }
         }catch(e){
             showErrorAlert();
             console.log(e);
@@ -44,7 +50,7 @@ const Home = ()=>{
     }
 
     return (
-            <View  style={styles.flatList}>
+            <View  style={styles.container}>
                 <TextInput 
                 style={styles.textInput}
                 value={searchText}
@@ -53,14 +59,18 @@ const Home = ()=>{
                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                     <Text style={styles.submitBtnText}>Get Movies</Text>
                 </TouchableOpacity>
-                <FlatList
+                {
+                  searchResults.length === 0 ? 
+                  <Text style={styles.notFoundText}>No movies found for this search</Text>
+                : (<FlatList
               data={searchResults}
               renderItem={({item})=>(
                 <MovieCard movie={item} onShortlistButtonPress={()=> onShortlistButtonPress(item)}/>
               )}
               numColumns={2}
               contentContainerStyle={styles.flatList}
-            />
+            />)
+              }
             </View>
     )
 }
@@ -69,7 +79,7 @@ const styles = StyleSheet.create({
    container:{
     flex: 1, 
     paddingHorizontal: 10, 
-    paddingVertical: 20
+    paddingBottom: 20
    },
    textInput: {
     height: 40,
@@ -80,11 +90,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'orange',
     padding: 10,
     alignItems:'center',
+    borderRadius: 10,
    },
    submitBtnText:{
     color: '#fff',
-    fontSize: 20
+    fontSize: 15
    },
-   flatList:{marginVertical: 20, paddingBottom: 50 }
+   notFoundText:{
+    fontSize: 20,
+    textAlign: 'center',
+    marginTop: 10,
+   },
+   flatList:{marginVertical: 20, paddingBottom: 50, justifyContent:'space-around'}
 })
 export default Home;
