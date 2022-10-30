@@ -4,7 +4,7 @@ import MovieCard from '../components/MovieCard';
 import {useShortListContext} from '../contexts/shortListedContext';
 
 const NoMovies = ()=> <View style={styles.empty}>
-<Text style={styles.emptyText}>Mo movies shortlisted yet!</Text>
+<Text style={styles.emptyText}>No movies shortlisted yet!</Text>
 </View>
 const ShortListed = ()=>{
   const { movies} = useShortListContext();
