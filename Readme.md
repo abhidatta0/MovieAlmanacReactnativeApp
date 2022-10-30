@@ -12,3 +12,10 @@ npx react-native run-android --variant=release
 
 ### A generate apk can be found here:
 https://drive.google.com/file/d/1nk8ob-9w9Z7qjYfIhCJLLkizkqYzUaeY/view?usp=sharing
+
+### Screenshots
+- Home page  
+<img src="./Screenshots/home.png" height="400">
+
+- Shortlisted page  
+<img src="./Screenshots/shortlisted.png" height="400">
